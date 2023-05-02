@@ -22,7 +22,7 @@
 # Parameters
 /app/config/parameters.yml
 /app/config/parameters.ini
-
+/database/
 # Managed by Composer
 /app/bootstrap.php.cache
 /var/bootstrap.php.cache
@@ -38,7 +38,7 @@
 # PHPUnit
 /app/phpunit.xml
 /phpunit.xml
-
+/.idea/
 # Build data
 /build/
 
