@@ -18,7 +18,7 @@
 # Logs (Symfony4)
 /var/log/*
 !var/log/.gitkeep
-
+/public/bundles/apiplatform/
 # Parameters
 /app/config/parameters.yml
 /app/config/parameters.ini
@@ -38,7 +38,6 @@
 # PHPUnit
 /app/phpunit.xml
 /phpunit.xml
-/.idea/
 # Build data
 /build/
 
