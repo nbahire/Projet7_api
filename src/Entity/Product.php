@@ -3,12 +3,29 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Put;
 use App\Repository\ProductRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    operations: [
+        new Get(
+            normalizationContext: [
+                'groups' => ['read:produit']
+            ]
+        ),
+        new getCollection()
+    ],
+    normalizationContext: [
+        'groups' => ['read:produit']
+    ]
+)]
 class Product
 {
     #[ORM\Id]
@@ -17,21 +34,27 @@ class Product
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[groups(['read:product'])]
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
+    #[groups(['read:product'])]
     private ?string $image = null;
 
     #[ORM\Column]
+    #[groups(['read:product'])]
     private ?float $price = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[groups(['read:product'])]
     private ?string $description = null;
 
     #[ORM\Column]
+    #[groups(['read:product'])]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column]
+    #[groups(['read:product'])]
     private ?\DateTimeImmutable $updatedAt = null;
 
     public function getId(): ?int

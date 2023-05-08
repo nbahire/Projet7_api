@@ -3,55 +3,71 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints\Length;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    operations: [
+        new Get(
+            normalizationContext: [
+                'groups' => ['read:user']
+            ]
+        ),
+        new getCollection(),
+        new Post(
+            validationContext: [
+                'groups' => ['create:user']
+            ]
+        ),
+        new Delete()
+    ],
+    normalizationContext: [
+        'groups' => ['read:user']
+    ],
+    order: ['id:ASC']
+)]
 class User
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[groups(['read:user'])]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255 )]
-    private ?string $name = null;
-
     #[ORM\Column(length: 180, unique: true)]
+    #[groups(['read:user'])]
     private ?string $email = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $password = null;
-
-    #[ORM\Column]
-    private ?bool $isVerified = null;
-
-    #[ORM\Column]
-    private ?\DateTimeImmutable $createdAt = null;
-
-    #[ORM\Column]
-    private ?\DateTimeImmutable $updatedAt = null;
 
     #[ORM\ManyToOne(targetEntity: Client::class,inversedBy: 'users')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Client $client = null;
 
+    #[ORM\Column(length: 255)]
+    #[
+        groups(['read:user', 'create:user']),
+        length(min: 5, minMessage: 'Veillez rentrer au  moins 5 caractère', groups: ['create:user'])
+    ]
+    private ?string $firstName = null;
+
+    #[ORM\Column(length: 255)]
+    #[
+        groups(['read:user', 'create:user']),
+        length(min: 5, minMessage: 'Veillez rentrer au  moins 5 caractère', groups: ['create:user'])
+    ]
+
+    private ?string $lastName = null;
+
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getName(): ?string
-    {
-        return $this->name;
-    }
-
-    public function setName(string $name): self
-    {
-        $this->name = $name;
-
-        return $this;
     }
 
     public function getEmail(): ?string
@@ -66,54 +82,6 @@ class User
         return $this;
     }
 
-    public function getPassword(): ?string
-    {
-        return $this->password;
-    }
-
-    public function setPassword(string $password): self
-    {
-        $this->password = $password;
-
-        return $this;
-    }
-
-    public function isIsVerified(): ?bool
-    {
-        return $this->isVerified;
-    }
-
-    public function setIsVerified(bool $isVerified): self
-    {
-        $this->isVerified = $isVerified;
-
-        return $this;
-    }
-
-    public function getCreatedAt(): ?\DateTimeImmutable
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(\DateTimeImmutable $createdAt): self
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
-    }
-
-    public function getUpdatedAt(): ?\DateTimeImmutable
-    {
-        return $this->updatedAt;
-    }
-
-    public function setUpdatedAt(\DateTimeImmutable $updatedAt): self
-    {
-        $this->updatedAt = $updatedAt;
-
-        return $this;
-    }
-
     public function getClient(): ?Client
     {
         return $this->client;
@@ -122,6 +90,30 @@ class User
     public function setClient(?Client $client): self
     {
         $this->client = $client;
+
+        return $this;
+    }
+
+    public function getFirstName(): ?string
+    {
+        return $this->firstName;
+    }
+
+    public function setFirstName(string $firstName): self
+    {
+        $this->firstName = $firstName;
+
+        return $this;
+    }
+
+    public function getLastName(): ?string
+    {
+        return $this->lastName;
+    }
+
+    public function setLastName(string $lastName): self
+    {
+        $this->lastName = $lastName;
 
         return $this;
     }
