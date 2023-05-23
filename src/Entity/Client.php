@@ -2,18 +2,12 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Action\NotFoundAction;
-use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\Get;
-use ApiPlatform\Metadata\GetCollection;
-use App\Controller\Api\MeController;
 use App\Repository\ClientRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -24,30 +18,22 @@ class Client implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[groups(['client:list','client:detail'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
     #[
-        groups(['client:list','client:detail']),
         NotBlank(message: 'Ce champs ne doit pas être vide.'),
         Email(message: 'Format invalide')
     ]
     private ?string $email = null;
 
     #[ORM\Column]
-    #[groups(['client:list','client:detail'])]
-    private array $roles = [];
-
-    #[ORM\Column]
     #[
-        groups(['client:detail']),
         length(min: 5, minMessage: 'Veillez rentrer au  moins 5 caractère')
     ]
     private ?string $password = null;
 
     #[ORM\Column(length: 255)]
-    #[groups(['client:list','client:detail'])]
     private ?string $name = null;
 
     #[ORM\Column]
@@ -59,6 +45,7 @@ class Client implements UserInterface, PasswordAuthenticatedUserInterface
     public function __construct()
     {
         $this->users = new ArrayCollection();
+        $this->createdAt = new \DateTimeImmutable();
     }
 
     public function getId(): ?int
@@ -93,18 +80,9 @@ class Client implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getRoles(): array
     {
-        $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
+        $roles = ['ROLE_USER'];
 
         return array_unique($roles);
-    }
-
-    public function setRoles(array $roles): self
-    {
-        $this->roles = $roles;
-
-        return $this;
     }
 
     /**

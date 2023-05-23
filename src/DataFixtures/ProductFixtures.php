@@ -20,6 +20,9 @@ class ProductFixtures extends Fixture
             $product->setName($faker->words(3, true))
                 ->setDescription($faker->paragraphs(4, true))
                 ->setPrice($faker->numberBetween(20000, 100000))
+                ->setBrand($faker->company())
+                ->setColor($faker->colorName())
+                ->setTaxes($faker->numberBetween(2000, 10000))
             ;
 
             $manager->persist($product);
