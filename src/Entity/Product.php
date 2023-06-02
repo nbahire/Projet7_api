@@ -18,6 +18,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
         new Get(),
         new GetCollection()
     ],
+    cacheHeaders: [
+        'max_age' => 3600,
+    ],
     normalizationContext: [
         'groups' => ['product:read']
     ]
@@ -28,26 +31,28 @@ class Product
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+
+    #[groups(['product:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[groups(['product:read'])]
+    #[Groups(['product:read'])]
     private ?string $name = null;
 
     #[ORM\Column]
-    #[groups(['product:read'])]
+    #[Groups(['product:read'])]
     private ?int $price = null;
 
     #[ORM\Column(type: Types::TEXT)]
-    #[groups(['product:read'])]
+    #[Groups(['product:read'])]
     private ?string $description = null;
 
     #[ORM\Column]
-    #[groups(['product:read'])]
+    #[Groups(['product:read'])]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column]
-    #[groups(['product:read'])]
+    #[Groups(['product:read'])]
     private ?\DateTimeImmutable $updatedAt = null;
 
     #[ORM\Column(length: 155)]

@@ -1,7 +1,6 @@
 # api/config/packages/api_platform.yaml
 api_platform:
   formats:
-    jsonld:   ['application/ld+json']
     jsonhal:  ['application/hal+json']
     json:     ['application/json']
     html:     ['text/html']

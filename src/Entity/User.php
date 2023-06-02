@@ -23,6 +23,10 @@ use Symfony\Component\Validator\Constraints\NotBlank;
         new Post(),
         new Delete()
     ],
+    cacheHeaders: [
+        'max_age' => 60,
+        'shared_max_age' => 120,
+    ],
     normalizationContext: [
         'groups' => ['user:read']
     ],
@@ -48,7 +52,7 @@ class User
     private ?string $email = null;
 
 
-    #[ORM\ManyToOne(targetEntity: Client::class, inversedBy: 'users')]
+    #[ORM\ManyToOne(targetEntity: Client::class)]
     #[ORM\JoinColumn(nullable: false)]
     private ?Client $client = null;
 
