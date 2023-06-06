@@ -1,0 +1,12 @@
+# api/config/packages/api_platform.yaml
+api_platform:
+  formats:
+    jsonhal:  ['application/hal+json']
+    json:     ['application/json']
+    html:     ['text/html']
+
+  swagger:
+    api_keys:
+      JWT:
+        name: Authorization
+        type: header
